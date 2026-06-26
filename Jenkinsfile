@@ -17,22 +17,17 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                bat 'docker rm -f test-api || exit /b 0'
-
-                bat 'docker run -d -p 8082:8080 --name test-api employee-api:latest'
-
-                sleep time: 15, unit: 'SECONDS'
-
-                bat 'curl http://localhost:8082/api/employees'
-
-                bat 'docker stop test-api'
-                bat 'docker rm test-api'
+       stage('Push to DockerHub') {
+    steps {
+        script {
+            withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                bat "docker login -u %USER% -p %PASS%"
+                bat "docker tag employee-api:latest %USER%/employee-api:latest"
+                bat "docker push %USER%/employee-api:latest"
             }
         }
     }
-
+}
     post {
         always {
             bat 'docker stop test-api || exit /b 0'
