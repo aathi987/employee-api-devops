@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     stages {
+
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/aathi987/employee-api-devops.git'
@@ -17,17 +18,24 @@ pipeline {
             }
         }
 
-       stage('Push to DockerHub') {
-    steps {
-        script {
-            withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                bat "docker login -u %USER% -p %PASS%"
-                bat "docker tag employee-api:latest %USER%/employee-api:latest"
-                bat "docker push %USER%/employee-api:latest"
+        stage('Push to DockerHub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'dockerhub-creds',
+                        usernameVariable: 'USER',
+                        passwordVariable: 'PASS'
+                    )]) {
+
+                        bat 'docker login -u %USER% -p %PASS%'
+                        bat 'docker tag employee-api:latest %USER%/employee-api:latest'
+                        bat 'docker push %USER%/employee-api:latest'
+                    }
+                }
             }
         }
     }
-}
+
     post {
         always {
             bat 'docker stop test-api || exit /b 0'
