@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DevOps Employee Hub</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="brand">
+            <div class="logo">⚡</div>
+
+            <div>
+                <h1>DevOps Employee Hub</h1>
+                <p>End-to-End CI/CD Pipeline for Spring Boot Microservice</p>
+            </div>
+        </div>
+
+        <div class="live-status">
+            <span class="status-dot"></span>
+            <span id="apiStatus">Checking API...</span>
+        </div>
+
+    </header>
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <span class="badge">
+                🚀 PRODUCTION READY
+            </span>
+
+            <h2>
+                Automated CI/CD
+                <span>Employee Platform</span>
+            </h2>
+
+            <p>
+                A containerized Spring Boot microservice continuously
+                built, tested and deployed using a modern DevOps pipeline.
+            </p>
+
+            <div class="hero-buttons">
+
+                <button class="primary-btn" onclick="scrollToEmployees()">
+                    👥 View Employees
+                </button>
+
+                <button class="secondary-btn" onclick="checkAPI()">
+                    🔄 Check API
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="hero-visual">
+
+            <div class="cloud-icon">☁️</div>
+
+            <div class="server-box">
+                <div class="server-light"></div>
+                <div class="server-light"></div>
+                <div class="server-light"></div>
+                <p>SPRING BOOT API</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= STAT CARDS ================= -->
+
+    <section class="stats">
+
+        <div class="stat-card">
+
+            <div class="stat-icon purple">👥</div>
+
+            <div>
+                <p>Total Employees</p>
+                <h3 id="employeeCount">0</h3>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon green">🟢</div>
+
+            <div>
+                <p>API Status</p>
+                <h3 id="dashboardStatus">Checking...</h3>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon blue">🚀</div>
+
+            <div>
+                <p>Deployment</p>
+                <h3>SUCCESS</h3>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon orange">⚙️</div>
+
+            <div>
+                <p>Pipeline Stages</p>
+                <h3>6</h3>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= EMPLOYEES ================= -->
+
+    <section class="section" id="employees">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-label">DATABASE</span>
+                <h2>👥 Employee Management</h2>
+                <p>Live employee information retrieved from the REST API.</p>
+            </div>
+
+            <button class="refresh-btn" onclick="loadEmployees()">
+                🔄 Refresh
+            </button>
+
+        </div>
+
+
+        <div class="search-container">
+
+            <input
+                type="text"
+                id="search"
+                placeholder="🔍 Search employee..."
+            >
+
+        </div>
+
+
+        <div id="employeeContainer" class="employee-grid">
+
+            <div class="loading">
+                <div class="spinner"></div>
+                Loading employees...
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= CI/CD PIPELINE ================= -->
+
+    <section class="section pipeline-section">
+
+        <div class="section-heading center">
+
+            <div>
+                <span class="section-label">AUTOMATION</span>
+
+                <h2>🚀 CI/CD Pipeline</h2>
+
+                <p>
+                    From source code to production deployment.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="pipeline">
+
+            <!-- GitHub -->
+
+            <div class="pipeline-stage">
+
+                <div class="pipeline-icon github">
+                    ◉
+                </div>
+
+                <h3>GitHub</h3>
+
+                <p>Source Code</p>
+
+                <span class="success">
+                    ✓ SUCCESS
+                </span>
+
+            </div>
+
+
+            <div class="pipeline-arrow">
+                →
+            </div>
+
+
+            <!-- Jenkins -->
+
+            <div class="pipeline-stage">
+
+                <div class="pipeline-icon jenkins">
+                    ⚙️
+                </div>
+
+                <h3>Jenkins</h3>
+
+                <p>CI Automation</p>
+
+                <span class="success">
+                    ✓ SUCCESS
+                </span>
+
+            </div>
+
+
+            <div class="pipeline-arrow">
+                →
+            </div>
+
+
+            <!-- Maven -->
+
+            <div class="pipeline-stage">
+
+                <div class="pipeline-icon maven">
+                    ☕
+                </div>
+
+                <h3>Maven</h3>
+
+                <p>Build & Test</p>
+
+                <span class="success">
+                    ✓ SUCCESS
+                </span>
+
+            </div>
+
+
+            <div class="pipeline-arrow">
+                →
+            </div>
+
+
+            <!-- Docker -->
+
+            <div class="pipeline-stage">
+
+                <div class="pipeline-icon docker">
+                    ◈
+                </div>
+
+                <h3>Docker</h3>
+
+                <p>Containerization</p>
+
+                <span class="success">
+                    ✓ SUCCESS
+                </span>
+
+            </div>
+
+
+            <div class="pipeline-arrow">
+                →
+            </div>
+
+
+            <!-- Render -->
+
+            <div class="pipeline-stage">
+
+                <div class="pipeline-icon render">
+                    ▲
+                </div>
+
+                <h3>Render</h3>
+
+                <p>Deployment</p>
+
+                <span class="success">
+                    ✓ LIVE
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="pipeline-result">
+
+            <div class="pulse"></div>
+
+            <div>
+                <strong>Deployment Successful</strong>
+                <p>Application is running in production</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= DEPLOYMENT HISTORY ================= -->
+
+    <section class="section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-label">
+                    PIPELINE LOGS
+                </span>
+
+                <h2>📊 Deployment History</h2>
+
+                <p>
+                    CI/CD pipeline execution stages.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="deployment-card">
+
+            <div class="deployment-header">
+
+                <div>
+                    <span class="version">
+                        VERSION v1.0.0
+                    </span>
+
+                    <h3>Production Deployment</h3>
+                </div>
+
+                <span class="deployment-success">
+                    ✓ SUCCESS
+                </span>
+
+            </div>
+
+
+            <div class="timeline">
+
+                <div class="timeline-item">
+
+                    <div class="timeline-dot"></div>
+
+                    <div>
+                        <h4>GitHub Checkout</h4>
+                        <p>Source code retrieved successfully</p>
+                    </div>
+
+                    <span>✓</span>
+
+                </div>
+
+
+                <div class="timeline-item">
+
+                    <div class="timeline-dot"></div>
+
+                    <div>
+                        <h4>Maven Build</h4>
+                        <p>Spring Boot application compiled</p>
+                    </div>
+
+                    <span>✓</span>
+
+                </div>
+
+
+                <div class="timeline-item">
+
+                    <div class="timeline-dot"></div>
+
+                    <div>
+                        <h4>Automated Testing</h4>
+                        <p>Application tests completed</p>
+                    </div>
+
+                    <span>✓</span>
+
+                </div>
+
+
+                <div class="timeline-item">
+
+                    <div class="timeline-dot"></div>
+
+                    <div>
+                        <h4>Docker Build</h4>
+                        <p>Production container image created</p>
+                    </div>
+
+                    <span>✓</span>
+
+                </div>
+
+
+                <div class="timeline-item">
+
+                    <div class="timeline-dot"></div>
+
+                    <div>
+                        <h4>Docker Push</h4>
+                        <p>Container image pushed successfully</p>
+                    </div>
+
+                    <span>✓</span>
+
+                </div>
+
+
+                <div class="timeline-item">
+
+                    <div class="timeline-dot"></div>
+
+                    <div>
+                        <h4>Render Deployment</h4>
+                        <p>Application deployed to production</p>
+                    </div>
+
+                    <span>✓</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= HOW IT WORKS ================= -->
+
+    <section class="section how-section">
+
+        <div class="section-heading center">
+
+            <div>
+
+                <span class="section-label">
+                    ARCHITECTURE
+                </span>
+
+                <h2>🔄 How This Project Works</h2>
+
+                <p>
+                    Automated software delivery from development to production.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="workflow">
+
+            <div class="workflow-item">
+                <span>01</span>
+                <h3>Developer</h3>
+                <p>Writes and pushes application code.</p>
+            </div>
+
+            <div class="workflow-line"></div>
+
+            <div class="workflow-item">
+                <span>02</span>
+                <h3>GitHub</h3>
+                <p>Stores and manages source code.</p>
+            </div>
+
+            <div class="workflow-line"></div>
+
+            <div class="workflow-item">
+                <span>03</span>
+                <h3>Jenkins</h3>
+                <p>Automatically triggers the pipeline.</p>
+            </div>
+
+            <div class="workflow-line"></div>
+
+            <div class="workflow-item">
+                <span>04</span>
+                <h3>Docker</h3>
+                <p>Packages the application into a container.</p>
+            </div>
+
+            <div class="workflow-line"></div>
+
+            <div class="workflow-item">
+                <span>05</span>
+                <h3>Production</h3>
+                <p>Application becomes available to users.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= TECHNOLOGY STACK ================= -->
+
+    <section class="section">
+
+        <div class="section-heading center">
+
+            <div>
+
+                <span class="section-label">
+                    TECHNOLOGIES
+                </span>
+
+                <h2>🛠️ Technology Stack</h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="tech-grid">
+
+            <div class="tech-card">
+                <span>☕</span>
+                <h3>Java</h3>
+                <p>Programming</p>
+            </div>
+
+            <div class="tech-card">
+                <span>🌱</span>
+                <h3>Spring Boot</h3>
+                <p>Backend</p>
+            </div>
+
+            <div class="tech-card">
+                <span>📦</span>
+                <h3>Maven</h3>
+                <p>Build Tool</p>
+            </div>
+
+            <div class="tech-card">
+                <span>🐙</span>
+                <h3>GitHub</h3>
+                <p>Version Control</p>
+            </div>
+
+            <div class="tech-card">
+                <span>🔧</span>
+                <h3>Jenkins</h3>
+                <p>CI/CD</p>
+            </div>
+
+            <div class="tech-card">
+                <span>🐳</span>
+                <h3>Docker</h3>
+                <p>Containerization</p>
+            </div>
+
+            <div class="tech-card">
+                <span>🔌</span>
+                <h3>REST API</h3>
+                <p>Communication</p>
+            </div>
+
+            <div class="tech-card">
+                <span>🌐</span>
+                <h3>Render</h3>
+                <p>Cloud Deployment</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= PROJECT INFORMATION ================= -->
+
+    <section class="section project-info">
+
+        <div class="project-content">
+
+            <span class="section-label">
+                PROJECT
+            </span>
+
+            <h2>📌 End-to-End CI/CD Pipeline</h2>
+
+            <p>
+                A Spring Boot employee management microservice
+                integrated with an automated CI/CD pipeline.
+                The application is containerized using Docker
+                and continuously deployed to the cloud.
+            </p>
+
+
+            <div class="project-details">
+
+                <div>
+                    <span>Application</span>
+                    <strong>Employee Management API</strong>
+                </div>
+
+                <div>
+                    <span>Architecture</span>
+                    <strong>REST Microservice</strong>
+                </div>
+
+                <div>
+                    <span>CI/CD</span>
+                    <strong>Jenkins Pipeline</strong>
+                </div>
+
+                <div>
+                    <span>Container</span>
+                    <strong>Docker</strong>
+                </div>
+
+                <div>
+                    <span>Deployment</span>
+                    <strong>Render Cloud</strong>
+                </div>
+
+                <div>
+                    <span>Frontend</span>
+                    <strong>HTML + CSS + JavaScript</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <div class="footer-logo">
+            ⚡ DevOps Employee Hub
+        </div>
+
+        <p>
+            End-to-End CI/CD Pipeline Project
+        </p>
+
+        <span>
+            Built with HTML • CSS • JavaScript • Spring Boot • Jenkins • Docker
+        </span>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
