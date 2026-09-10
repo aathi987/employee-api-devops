@@ -5,400 +5,114 @@
 
 
 /* ================= API CONFIGURATION ================= */
-
-const API_URL =
-    "https://employee-api-latest-qt1q.onrender.com/api/employees";
-
-
-/* Store employees globally */
-
-let allEmployees = [];
-
-
-/* ================= LOAD EMPLOYEES ================= */
-
-async function loadEmployees() {
-
-    const container =
-        document.getElementById("employeeContainer");
-
-    const status =
-        document.getElementById("apiStatus");
-
-    const dashboardStatus =
-        document.getElementById("dashboardStatus");
-
-
-    /* Loading UI */
-
-    container.innerHTML = `
-        <div class="loading">
-            <div class="spinner"></div>
-            Connecting to Spring Boot API...
-        </div>
-    `;
-
-
-    try {
-
-        const response =
-            await fetch(API_URL);
-
-
-        /* Check HTTP response */
-
-        if (!response.ok) {
-
-            throw new Error(
-                "API returned HTTP " + response.status
-            );
-
-        }
-
-
-        /* Convert JSON */
-
-        const employees =
-            await response.json();
-
-
-        /* Store data */
-
-        allEmployees = employees;
-
-
-        /* Display employees */
-
-        displayEmployees(employees);
-
-
-        /* Update count */
-
-        document.getElementById(
-            "employeeCount"
-        ).textContent = employees.length;
-
-
-        /* Update API status */
-
-        status.textContent =
-            "API ONLINE";
-
-        dashboardStatus.textContent =
-            "ONLINE";
-
-
-        console.log(
-            "Employees loaded successfully:",
-            employees
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "API Error:",
-            error
-        );
-
-
-        container.innerHTML = `
-
-            <div class="loading">
-
-                <h3>⚠️ Unable to load employees</h3>
-
-                <p>
-                    Please check the Spring Boot API
-                    or your internet connection.
-                </p>
-
-            </div>
-
-        `;
-
-
-        status.textContent =
-            "API OFFLINE";
-
-        dashboardStatus.textContent =
-            "OFFLINE";
-
-
-        document.getElementById(
-            "employeeCount"
-        ).textContent = "—";
-
-    }
-
-}
-
-
-/* ================= DISPLAY EMPLOYEES ================= */
-
-function displayEmployees(employees) {
-
-    const container =
-        document.getElementById(
-            "employeeContainer"
-        );
-
-
-    /* No employees */
-
-    if (!employees || employees.length === 0) {
-
-        container.innerHTML = `
-
-            <div class="loading">
-
-                <h3>👥 No Employees Found</h3>
-
-                <p>
-                    The API returned an empty employee list.
-                </p>
-
-            </div>
-
-        `;
-
-        return;
-    }
-
-
-    /* Clear existing cards */
-
-    container.innerHTML = "";
-
-
-    /* Create employee cards */
-
-    employees.forEach((employee, index) => {
-
-        const card =
-            document.createElement("div");
-
-
-        card.className =
-            "employee-card";
-
-
-        /* Use available employee properties */
-
-        const employeeName =
-            employee.name ||
-            employee.employeeName ||
-            "Employee";
-
-
-        const employeeId =
-            employee.id ||
-            employee.employeeId ||
-            index + 1;
-
-
-        card.innerHTML = `
-
-            <div class="employee-icon">
-                👤
-            </div>
-
-
-            <h3>
-                ${escapeHTML(employeeName)}
-            </h3>
-
-
-            <p>
-                Employee ID: #${escapeHTML(
-                    String(employeeId)
-                )}
-            </p>
-
-
-            <span class="role">
-                DevOps Engineer
-            </span>
-
-
-            <button
-                onclick="showEmployee(
-                    ${employeeId},
-                    '${escapeHTML(employeeName)}'
-                )"
-            >
-                View Profile →
-            </button>
-
-        `;
-
-
-        container.appendChild(card);
-
-    });
-
-}
-
-
-/* ================= SEARCH ================= */
-
-document
-    .getElementById("search")
-    .addEventListener(
-        "input",
-        function () {
-
-            const searchValue =
-                this.value
-                    .toLowerCase()
-                    .trim();
-
-
-            const filtered =
-                allEmployees.filter(
-                    employee => {
-
-                        const name =
-                            String(
-                                employee.name ||
-                                employee.employeeName ||
-                                ""
-                            ).toLowerCase();
-
-
-                        return name.includes(
-                            searchValue
-                        );
-
-                    }
-                );
-
-
-            displayEmployees(filtered);
-
-        }
-    );
-
-
-/* ================= API HEALTH CHECK ================= */
+const API_URL = '/api/employees';
 
 async function checkAPI() {
+  const statusEl = document.getElementById('apiStatus');
+  const dashStatus = document.getElementById('dashboardStatus');
+  try {
+    const res = await fetch(API_URL);
+    if (res.ok) {
+      statusEl.innerText = '● API Online';
+      statusEl.style.color = '#22c55e';
+      if(dashStatus) dashStatus.innerText = 'Online';
+      return true;
+    } else throw new Error();
+  } catch (e) {
+    statusEl.innerText = '● API Offline';
+    statusEl.style.color = '#ef4444';
+    if(dashStatus) dashStatus.innerText = 'Offline';
+    return false;
+  }
+}
 
-    const status =
-        document.getElementById(
-            "apiStatus"
+async function loadEmployees() {
+  const container = document.getElementById('employeeContainer');
+  const countEl = document.getElementById('employeeCount');
+  
+  container.innerHTML = `<div class="loading"><div class="spinner"></div>Loading employees...</div>`;
+  
+  try {
+    const res = await fetch(API_URL);
+    const employees = await res.json();
+    console.log('Employees:', employees);
+
+    if(countEl) countEl.innerText = employees.length;
+
+    if (employees.length === 0) {
+      container.innerHTML = `
+        <div style="text-align:center; padding:40px; grid-column: 1/-1;">
+          <p>No employees yet. Database is empty.</p>
+          <button class="primary-btn" onclick="addSample()">+ Add Sample Employee</button>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = employees.map(emp => `
+      <div class="employee-card">
+        <div class="employee-header">
+          <div class="employee-avatar">${emp.name ? emp.name.charAt(0).toUpperCase() : 'E'}</div>
+          <div>
+            <h3>${emp.name || 'No Name'}</h3>
+            <p>${emp.department || 'General'}</p>
+          </div>
+        </div>
+        <div class="employee-details">
+          <p>📧 ${emp.email || 'No email'}</p>
+          <p>🆔 ID: ${emp.id}</p>
+        </div>
+      </div>
+    `).join('');
+
+    // search filter
+    const searchInput = document.getElementById('search');
+    if(searchInput){
+      searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = employees.filter(emp => 
+          emp.name.toLowerCase().includes(term) || 
+          emp.email.toLowerCase().includes(term) ||
+          emp.department.toLowerCase().includes(term)
         );
-
-    const dashboardStatus =
-        document.getElementById(
-            "dashboardStatus"
-        );
-
-
-    status.textContent =
-        "Checking...";
-
-
-    dashboardStatus.textContent =
-        "Checking...";
-
-
-    try {
-
-        const response =
-            await fetch(API_URL);
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "API unavailable"
-            );
-
+        if(filtered.length === 0){
+          container.innerHTML = '<p style="text-align:center; width:100%">No match found</p>';
+        } else {
+          container.innerHTML = filtered.map(emp => `
+            <div class="employee-card">
+              <div class="employee-header">
+                <div class="employee-avatar">${emp.name.charAt(0).toUpperCase()}</div>
+                <div><h3>${emp.name}</h3><p>${emp.department}</p></div>
+              </div>
+              <div class="employee-details">
+                <p>📧 ${emp.email}</p><p>🆔 ID: ${emp.id}</p>
+              </div>
+            </div>`).join('');
         }
-
-
-        status.textContent =
-            "API ONLINE";
-
-
-        dashboardStatus.textContent =
-            "ONLINE";
-
-
-    } catch (error) {
-
-        console.error(error);
-
-
-        status.textContent =
-            "API OFFLINE";
-
-
-        dashboardStatus.textContent =
-            "OFFLINE";
-
+      });
     }
 
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = `<div style="color:red; text-align:center; grid-column:1/-1;">
+      Failed to load employees<br><small>${err.message}</small><br>
+      <button class="refresh-btn" onclick="loadEmployees()">Retry</button>
+    </div>`;
+  }
 }
 
-
-/* ================= EMPLOYEE PROFILE ================= */
-
-function showEmployee(id, name) {
-
-    alert(
-        "Employee Profile\n\n" +
-        "Name: " + name + "\n" +
-        "Employee ID: #" + id + "\n" +
-        "Role: DevOps Engineer\n" +
-        "Status: Active"
-    );
-
+async function addSample(){
+  await fetch(API_URL, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({name: 'Aathi Kesava', email: 'aathi@test.com', department: 'DevOps'})
+  });
+  loadEmployees();
 }
 
-
-/* ================= SCROLL ================= */
-
-function scrollToEmployees() {
-
-    document
-        .getElementById("employees")
-        .scrollIntoView({
-            behavior: "smooth"
-        });
-
+function scrollToEmployees(){
+  document.getElementById('employees').scrollIntoView({behavior:'smooth'});
 }
 
-
-/* ================= HTML SECURITY ================= */
-
-/*
-   Prevent API data containing HTML
-   from being directly injected.
-*/
-
-function escapeHTML(value) {
-
-    return value
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-}
-
-
-/* ================= INITIAL LOAD ================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-        loadEmployees();
-
-        checkAPI();
-
-    }
-);
+// init
+checkAPI();
+loadEmployees();
